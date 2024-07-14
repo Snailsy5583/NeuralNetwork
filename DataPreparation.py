@@ -13,19 +13,29 @@ class DataPreparation:
     
     def get_images(self):
         for file in os.listdir(directory):
-            if file.endswith('.png'):
+            if file.endswith('.png') or file.endswith('.jpg'):
                 self.image_paths.append(os.path.join(self.directory,file))
     
     def create_data(self):
         for file in self.image_paths:
-            img = Image.open(file)
-            image_data = asarray(img)
-            self.image_data.append(image_data)
-        np.array(self.image_data)
-        return self.image_data
-    
+            img = Image.open(file).convert('RGB')
+            raw_image_data = asarray(img)
+            pixel_brightness_data = np.zeros(raw_image_data.shape[:2])
+            for i in range(raw_image_data.shape[0]):
+                for j in range(raw_image_data.shape[1]):
+                    red, green, blue = raw_image_data[i,j]
+                    pixel_brightness = (red) / 255
+                    pixel_brightness_data[i,j] = pixel_brightness
+        self.image_data = (pixel_brightness_data)
+        new_image_data=  np.array(self.image_data).flatten()
+        return new_image_data
 if __name__ == "__main__":
-    directory = r'by_field\by_field\hsf_0\const\4a'
+    np.set_printoptions(threshold=np.inf)
+    #Change directory based on what folder of images needs to used for training
+    directory = r'by_field\by_field\hssf_8'
     data = DataPreparation(directory)
     data.get_images()
-    print(data.create_data())
+    with open('inputs.txt', 'w') as file:
+        file.write(str(data.create_data()))
+        file.write(str(data.create_data().shape))
+
