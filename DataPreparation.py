@@ -29,6 +29,7 @@ class DataPreparation:
         self.image_data = (pixel_brightness_data)
         new_image_data=  np.array(self.image_data).flatten()
         return new_image_data
+        
 if __name__ == "__main__":
     np.set_printoptions(threshold=np.inf)
     #Change directory based on what folder of images needs to used for training
