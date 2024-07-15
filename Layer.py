@@ -17,12 +17,12 @@ class Layer:
     def forward_prop(self):
         if not self.prev_layer:
             return None
-        mat1 = np.append(np.asarray(self.prev_layer.getValues()), 1)
+        mat1 = np.asmatrix(np.append(np.asarray(self.prev_layer.getValues()), 1))
         
-        arr2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
-        mat2 = arr2.T
+        mat2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
+        mat2 = mat2.T
         
-        values = np.asarray(np.matmul(mat1, mat2)).flatten()
+        values = np.asarray(np.matmul(mat1, mat2))[0]
         
         self.setValues(values)
         
@@ -44,7 +44,7 @@ class Layer:
     
 np.set_printoptions(threshold=np.inf)
 x = Layer(16384)
-z = Layer(30, x)
+z = Layer(16, x)
 #print(x.weights.shape)
 dp = DataPreparation(r'by_field\by_field\hssf_8')
 dp.get_images()
