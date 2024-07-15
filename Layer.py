@@ -9,40 +9,44 @@ class Layer:
         self.num_neurons = num_neurons
         self.prev_layer = prev_layer
         
-        self.neurons = [Neuron(len(prev_layer.getNeurons()) if prev_layer else 0) for i in range(num_neurons)]
-        self.weights = np.random.randn(num_neurons)
-        self.biases = np.random.randn(num_neurons)
+        num_weights = prev_layer.num_neurons if prev_layer else 0
+        self.neurons = [Neuron(num_weights) for i in range(num_neurons)]
         
-        self.values = []
+        print()
     
-    def forward_prop(self,inputs):
+    def forward_prop(self):
         if not self.prev_layer:
             return None
-        mat1 = self.prev_layer.values()
+        mat1 = np.append(np.asarray(self.prev_layer.getValues()), 1)
         
-        mat2 = np.matrix([np.append(neuron.weights,[neuron.bias]) for neuron in self.neurons])
-        mat2[:] = mat2.T
+        arr2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
+        mat2 = arr2.T
         
-        self.values = np.matmul(mat1, mat2)
+        values = np.asarray(np.matmul(mat1, mat2)).flatten()
         
-        return self.values
+        self.setValues(values)
+        
+        return values
     
     def backward_prop(self,output_gradient):
         pass
     
-    def values(self):
-        return self.values
+    def getValues(self):
+        return [neuron.value for neuron in self.neurons]
+    
+    def setValues(self, values):
+        for i in range(len(values)):
+            self.neurons[i].value = values[i]
     
     def getNeurons(self):
         return self.neurons
 
     
 np.set_printoptions(threshold=np.inf)
-x = Layer(356000)
+x = Layer(16384)
+z = Layer(30, x)
 #print(x.weights.shape)
 dp = DataPreparation(r'by_field\by_field\hssf_8')
 dp.get_images()
-#print(dp.create_data().shape)
-print(x.forward_prop(dp.create_data()))
-
-    
+x.setValues(dp.create_data())
+print(z.forward_prop())
