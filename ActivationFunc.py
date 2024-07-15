@@ -5,6 +5,9 @@ class ActivationFunction:
 	def __init__(self):
 		pass
 
+	def linear(x):
+		return x
+
 	def sigmoid(x):
 		return 1.0/(1.0+np.exp(-x))
 	

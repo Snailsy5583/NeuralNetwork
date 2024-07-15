@@ -1,5 +1,6 @@
 from Neuron import *
 from DataPreparation import DataPreparation
+from ActivationFunc import ActivationFunction as af
 import numpy as np
 
 class Layer:
@@ -11,8 +12,6 @@ class Layer:
         
         num_weights = prev_layer.num_neurons if prev_layer else 0
         self.neurons = [Neuron(num_weights) for i in range(num_neurons)]
-        
-        print()
     
     def forward_prop(self):
         if not self.prev_layer:
@@ -22,11 +21,11 @@ class Layer:
         mat2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
         mat2 = mat2.T
         
-        values = np.asarray(np.matmul(mat1, mat2))[0]
+        values = np.asarray(np.matmul(mat1, mat2)).flatten()
         
-        self.setValues(values)
+        self.setValues(values, af.sigmoid)
         
-        return values
+        return self.getValues()
     
     def backward_prop(self,output_gradient):
         pass
@@ -34,9 +33,9 @@ class Layer:
     def getValues(self):
         return [neuron.value for neuron in self.neurons]
     
-    def setValues(self, values):
+    def setValues(self, values, activationFunc=af.linear):
         for i in range(len(values)):
-            self.neurons[i].value = values[i]
+            self.neurons[i].value = activationFunc(values[i])
     
     def getNeurons(self):
         return self.neurons
