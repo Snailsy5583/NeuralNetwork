@@ -1,25 +1,32 @@
 import random
 import numpy as np
 
+from Layer import *
+
 # Activation Funciton
 def sigmoid(x):
         return 1.0/(1.0+np.exp(-x))
 
-
-class Net:
-    
-    #sizes is list of nums for number of input nodes at each layer
+class Network():
+    #sizes is list of nums for number of neurons at each layer
     def __init__(self, sizes):
-        self.num_layers = len(sizes)
         self.sizes = sizes
-        self.biases = [np.random.rand(y, 1) for y in sizes[1:]]
-        self.weights = [np.random.rand(y,x) for x,y in zip(sizes[:-1], sizes[1:])] ###
-                        
+        self.numLayers = len(sizes)
+        
+        self.layers = [Layer(self.sizes[i]) for i in range(self.numLayers)]
+    
     # a = current activation function
     def forward(self, a):
-        for w,b in zip(self.weights, self.biases): 
+        for w,b in zip(self.weights, self.biases):
             a = sigmoid(np.dot(w,a) + b)
         return a
+    
+    def forwardMat(self):
+        for i in range(self.numLayers-2): # for each hidden layer
+            
+            
+            # update layer
+            
 
 
 
