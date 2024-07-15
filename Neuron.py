@@ -1,8 +1,8 @@
 import numpy as np
 
 class Neuron():
-    def __init__(self):
+    def __init__(self, numOfWeights):
         self.value = 0
         
-        self.weights = []
+        self.weights = np.random.randn(numOfWeights)
         self.bias = 0

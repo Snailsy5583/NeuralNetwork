@@ -3,21 +3,38 @@ from DataPreparation import DataPreparation
 import numpy as np
 
 class Layer:
-
     #retrieve weights, inputs, and bias from first iteration
     #pass previous layer input into new layer (output of first iteration serves as input of next)
-
-    def __init__(self, num_neurons):
+    def __init__(self, num_neurons, prev_layer=None):
         self.num_neurons = num_neurons
+        self.prev_layer = prev_layer
+        
+        self.neurons = [Neuron(len(prev_layer.getNeurons()) if prev_layer else 0) for i in range(num_neurons)]
         self.weights = np.random.randn(num_neurons)
         self.biases = np.random.randn(num_neurons)
+        
+        self.values = []
     
     def forward_prop(self,inputs):
-        self.output = (np.dot(self.weights, inputs) + self.biases)
-        return self.output
+        if not self.prev_layer:
+            return None
+        mat1 = self.prev_layer.values()
+        
+        mat2 = np.matrix([np.append(neuron.weights,[neuron.bias]) for neuron in self.neurons])
+        mat2[:] = mat2.T
+        
+        self.values = np.matmul(mat1, mat2)
+        
+        return self.values
     
     def backward_prop(self,output_gradient):
         pass
+    
+    def values(self):
+        return self.values
+    
+    def getNeurons(self):
+        return self.neurons
 
     
 np.set_printoptions(threshold=np.inf)
