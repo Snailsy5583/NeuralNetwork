@@ -2,7 +2,6 @@ from Neuron import *
 from DataPreparation import DataPreparation
 from ActivationFunc import ActivationFunction as af
 import numpy as np
-import timeit
 
 class Layer:
     #retrieve weights, inputs, and bias from first iteration
@@ -14,21 +13,7 @@ class Layer:
         num_weights = prev_layer.num_neurons if prev_layer else 0
         self.neurons = [Neuron(num_weights) for i in range(num_neurons)]
     
-    def forward_prop(self):
-        if not self.prev_layer:
-            return None
-        mat1 = np.asmatrix(np.append(np.asarray(self.prev_layer.getValues()), 1))
-        
-        mat2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
-        mat2 = mat2.T
-        
-        values = np.asarray(np.matmul(mat1, mat2)).flatten()
-        
-        self.setValues(values, af.sigmoid)
-        
-        return self.getValues()
-    
-    def forward_prop_dot(self):
+    def forward_prop(self): #use this one
         if not self.prev_layer:
             return None
         mat1 = np.asmatrix(self.prev_layer.getValues())
@@ -37,6 +22,20 @@ class Layer:
         mat2 = mat2.T
         
         values = np.asarray(np.dot(mat1, mat2) + np.asarray([neuron.bias for neuron in self.neurons])).flatten()
+        
+        self.setValues(values, af.sigmoid)
+        
+        return self.getValues()
+    
+    def forward_prop_matmul(self):
+        if not self.prev_layer:
+            return None
+        mat1 = np.asmatrix(np.append(np.asarray(self.prev_layer.getValues()), 1))
+        
+        mat2 = np.asmatrix([np.append(neuron.weights,neuron.bias) for neuron in self.neurons])
+        mat2 = mat2.T
+        
+        values = np.asarray(np.matmul(mat1, mat2)).flatten()
         
         self.setValues(values, af.sigmoid)
         
@@ -61,14 +60,28 @@ class Layer:
     def getNeurons(self):
         return self.neurons
 
+def test_prop(num):
+    import time
     
-np.set_printoptions(threshold=np.inf)
-x = Layer(20)
-z = Layer(16, x)
-#print(x.weights.shape)
-# dp = DataPreparation(r'by_field\by_field\hssf_8')
-# dp.get_images()
-# x.setValues(dp.create_data())
-print(z.forward_prop())
-print(z.forward_prop_readable())
-print(z.forward_prop_dot())
+    x = Layer(16384)
+    z = Layer(16, x)
+    
+    dp = DataPreparation(r'by_field\by_field\hssf_8')
+    dp.get_images()
+    x.setValues(dp.create_data())
+    
+    t1 = time.time()
+    for i in range(num):
+        z.forward_prop()
+    t2 = time.time()
+    print(t2-t1)
+    
+    t1 = time.time()
+    for i in range(num):
+        z.forward_prop_matmul()
+    t2 = time.time()
+    print(t2-t1)
+
+
+if __name__ == "__main__":
+    test_prop(5000)
