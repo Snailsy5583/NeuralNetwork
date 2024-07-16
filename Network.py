@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 from Layer import *
-from ActivationFunc import *
+from ActivationFunc import ActivationFunction as AF   
 
 class Network():
     #sizes is list of nums for number of neurons at each layer
@@ -16,17 +16,21 @@ class Network():
             inputs = self.layers[i].forward_prop(inputs)
         return inputs
     
-    def backward(self,inputs):
-        pass
 
-     
+
+    def prop(w, b, X):
+        Z = AF.sigmoid(np.dot(w.T, X) + b)
+        cost = ...
+
+        #back
 
 
 
 ## Calc output for a single nueron given weights, bias, and inputs
 
 # a = current activation function
-    # def forward(self, a):
-    #     for w,b in zip(self.weights, self.biases):
-    #         a = sigmoid(np.dot(w,a) + b)
-    #     return a
+#     def forward(self, a):
+#         for w,b in zip(self.weights, self.biases):
+#             a = sigmoid(np.dot(w,a) + b)
+#         return a
+
