@@ -13,9 +13,13 @@ class Network():
     
     def forward(self, inputs):
         for i in range(1,len(self.layers)):
-            inputs = self.layers[i].forward_prop
+            inputs = self.layers[i].forward_prop(inputs)
         return inputs
-            
+    
+    def backward(self,inputs):
+        pass
+
+     
 
 
 

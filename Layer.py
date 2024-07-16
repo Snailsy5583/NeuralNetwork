@@ -18,9 +18,10 @@ class Layer:
     def forward_prop(self,inputs):
         if not self.prev_layer:
             return None
-        mat1 = self.prev_layer.values()
-        
-        mat2 = np.matrix([np.append(neuron.weights,[neuron.bias]) for neuron in self.neurons])
+        mat1 = np.array(self.prev_layer.values)
+        print(mat1.shape)
+        mat2 = np.array([np.append(neuron.weights,[neuron.bias]) for neuron in self.neurons])
+        print(mat2.shape)
         mat2[:] = mat2.T
         
         self.values = np.matmul(mat1, mat2)
@@ -37,12 +38,14 @@ class Layer:
         return self.neurons
 
     
-np.set_printoptions(threshold=np.inf)
-x = Layer(356000)
-#print(x.weights.shape)
-dp = DataPreparation(r'by_field\by_field\hssf_8')
-dp.get_images()
-#print(dp.create_data().shape)
-print(x.forward_prop(dp.create_data()))
+# np.set_printoptions(threshold=np.inf)
+# x = Layer(356000)
+# z = Layer(16,x)
+
+# #print(x.weights.shape)
+# dp = DataPreparation(r'by_field\by_field\hssf_8')
+# dp.get_images()
+# #print(dp.create_data().shape)
+# print(z.forward_prop(dp.create_data()))
 
     

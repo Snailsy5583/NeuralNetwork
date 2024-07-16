@@ -1,33 +1,34 @@
-from PIL import Image
-from numpy import asarray
 import numpy as np
-import sys
-import matplotlib
-import os
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
 
 class DataPreparation:
-    
-    def __init__(self,directory):
-        self.directory = directory
-        self.image_paths = []
-        self.image_data = []
 
-    def get_images(self):
-        for file in os.listdir(self.directory):
-            if file.endswith('.png') or file.endswith('.jpg'):
-                self.image_paths.append(os.path.join(self.directory,file))
+    def __init__(self):
+        (self.x_train, self.y_train), (self.x_test, self.y_test) = keras.datasets.mnist.load_data()
+
+    def flatten_array(self):
+        self.x_train = np.array(self.x_train.reshape((len(self.x_train)),(int(self.x_train.shape[1]) * int(self.x_train.shape[2]))))
+        self.x_test = np.array(self.x_test.reshape((len(self.x_test)),(int(self.x_test.shape[1]) * int(self.x_test.shape[2]))))
     
-    def create_data(self):
-        for file in self.image_paths:
-            img = Image.open(file).convert('RGB')
-            raw_image_data = asarray(img)
-            pixel_brightness_data = np.zeros(raw_image_data.shape[:2])
-            for i in range(raw_image_data.shape[0]):
-                for j in range(raw_image_data.shape[1]):
-                    red, green, blue = raw_image_data[i,j]
-                    pixel_brightness = (red) / 255
-                    pixel_brightness_data[i,j] = pixel_brightness
-            self.image_data = (pixel_brightness_data)
-        new_image_data=  np.array(self.image_data).flatten()
-        return new_image_data
-        
+    def select_num_images(self):
+        pass
+
+    def normalize_array(self):
+        self.x_train = self.x_train.astype(np.float32)
+        for i in range(len(self.x_train)):
+            self.x_train[i] = ((self.x_train[i]) / 255.0) 
+
+    def show_image(self):
+        plt.matshow(self.x_train)
+        plt.show()
+
+if __name__ == '__main__':
+    np.set_printoptions(threshold=np.inf)
+    db = DataPreparation()
+    db.flatten_array()
+    db.normalize_array()
+    print(db.x_train[0])
+    print(db.x_test.shape)
+    db.show_image() 
