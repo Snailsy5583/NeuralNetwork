@@ -2,6 +2,7 @@ from Neuron import *
 from DataPreparation import DataPreparation
 from ActivationFunc import ActivationFunction as af
 import numpy as np
+import time
 
 class Layer:
     #retrieve weights, inputs, and bias from first iteration

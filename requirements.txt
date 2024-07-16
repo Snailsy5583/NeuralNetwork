@@ -47,3 +47,4 @@ urllib3==2.2.2
 ushlex==0.99.1
 websocket-client==1.8.0
 zipp==3.19.2
+tensorflow==2.17.0
