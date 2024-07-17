@@ -16,7 +16,13 @@ class Network():
             inputs = self.layers[i].forward_prop(inputs)
         return inputs
     
-
+    def cost(self, batman):
+        output = self.layers[-1]
+        error = 0
+        for i in range(len(batman)):
+            error += (batman[i] - output[i])**2
+        
+        return error
 
     def prop(w, b, X):
         Z = AF.sigmoid(np.dot(w.T, X) + b)
