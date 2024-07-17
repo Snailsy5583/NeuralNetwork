@@ -1,11 +1,11 @@
 import sys
 
 import PIL
-
+import numpy as np
 import PIL.Image
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
-from PySide6.QtCore import *
+from PySide6.QtCore import * 
 
 class MainWindow(QMainWindow):
     def __init__(self, drawCallback):
@@ -14,14 +14,14 @@ class MainWindow(QMainWindow):
         self.drawCallback = drawCallback
 
         self.setWindowTitle("Draw something")
-        self.setGeometry(500, 300, 128, 128)
+        self.setGeometry(500, 300, 928, 928)
         
-        self.image = QPixmap(128, 128)
+        self.image = QPixmap(928, 928)
         self.image.fill(QColor(0,0,0))
         
         self.label = QLabel(self)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.label.setFixedSize(128, 128)
+        self.label.setFixedSize(928, 928)
         
         self.label.setPixmap(self.image)
         
@@ -58,4 +58,11 @@ def gen(drawCallback):
     app = QApplication(sys.argv)
     w = MainWindow(drawCallback)
     
-    return app, w
+    return app, w 
+
+def sigmoid(x):
+	return 1.0/(1.0+np.exp(-1*x))
+
+test = [1,2,3,4,5,6,7,8]
+print(-1*(test))
+#change to numpy array and it should work

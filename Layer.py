@@ -12,7 +12,7 @@ class Layer:
         self.prev_layer = prev_layer
         
         num_weights = prev_layer.num_neurons if prev_layer else 0
-        self.neurons = [Neuron(num_weights) for i in range(num_neurons)]
+        self.neurons = [Neuron(num_weights) for i in range(num_neurons)] 
     
     def forward_prop(self): #use this one
         if not self.prev_layer:
@@ -62,35 +62,26 @@ class Layer:
         return self.neurons
 
 class Layer_huh:
-    #retrieve weights, inputs, and bias from first iteration
-    #pass previous layer input into new layer (output of first iteration serves as input of next)
+    '''
+    Retrieve weights, inputs, and bias from first iteration
+    Pass previous layer input into new layer (output of first iteration serves as input of next)
+    Sets amount of weights and biases to the number of neurons in prev layer
+
+    '''
     def __init__(self, num_neurons, prev_layer=None):
         self.num_neurons = num_neurons
         self.prev_layer = prev_layer
-        self.weights, self.biases = init_w_zeros(num_neurons.shape[0])
-        num_weights = prev_layer.num_neurons if prev_layer else 0
-        self.neurons = [Neuron(num_weights) for i in range(num_neurons)]
+        self.values = []
+        if prev_layer:
+            self.weights, self.biases = self.init_w_zeros(prev_layer.getValues().shape[0])
 
-    def init_w_zeros(dim):
-        w = np.zeros(shape=(dim, 1))
-        b = 0
+    def forward_prop(self, W, b, input, activation):
+        values = activation(np.dot(W, input) + b)
+        self.values
+        return values
 
-        assert(w.shape == (dim, 1))
-
-        return w, b
-    
-    def forward_prop(self, w, b, input, label):
-        
-        
-        values = af.sigmoid(np.dot(w.T, input) + b)
-        self.setValues(values, af.sigmoid)
-        
-        return self.getValues()
-    
     def cost_der(self, X, y):
         return(X - y)
-    
-
     
     def backward_prop(self, x, y):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
@@ -124,9 +115,10 @@ class Layer_huh:
     def getNeurons(self):
         return self.neurons
     
-    
-    x = Layer(16384)
-    z = Layer(16, x)
+
+def test_prop(num):
+    x = Layer_huh(16384)
+    z = Layer_huh(16, x)
     
     dp = DataPreparation(r'by_field\by_field\hssf_8')
     dp.get_images()
