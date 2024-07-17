@@ -1,34 +1,59 @@
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
 import matplotlib.pyplot as plt
+from PIL import Image
+
+IMG_WIDTH = 28
+IMG_HEIGHT = 28
 
 class DataPreparation:
+    def __init__(self, filename):
+        self.file_name = filename
+        self.image_data = []
+        self.image_height, self.image_width = IMG_HEIGHT, IMG_WIDTH
+        self.num_images = 0
 
-    def __init__(self):
-        (self.x_train, self.y_train), (self.x_test, self.y_test) = keras.datasets.mnist.load_data()
+    def load_image_data(self):
+        with open(self.file_name, 'rb') as file:
+            data = file.read()
+            magic_number = int.from_bytes(data[:4], 'big')
+            num_images = int.from_bytes(data[4:8], 'big')
+            rows = int.from_bytes(data[8:12], 'big')
+            cols = int.from_bytes(data[12:16], 'big')
+            assert magic_number == 2051
+            assert rows == self.image_height and cols == self.image_width
+            image_data = np.frombuffer(data[16:], dtype=np.uint8)
 
-    def flatten_array(self):
-        self.x_train = np.array(self.x_train.reshape((len(self.x_train)),(int(self.x_train.shape[1]) * int(self.x_train.shape[2]))))
-        self.x_test = np.array(self.x_test.reshape((len(self.x_test)),(int(self.x_test.shape[1]) * int(self.x_test.shape[2]))))
-    
-    def select_num_images(self):
-        pass
+        self.num_images = num_images
+        self.image_data = image_data.reshape(self.num_images, self.image_height, self.image_width)
+        return self
 
-    def normalize_array(self):
-        self.x_train = self.x_train.astype(np.float32)
-        for i in range(len(self.x_train)):
-            self.x_train[i] = ((self.x_train[i]) / 255.0) 
+    def normalize_data(self):
+        self.image_data = self.image_data / 255.0
+        return self
 
-    def show_image(self):
-        plt.matshow(self.x_train)
-        plt.show()
+    def flatten_data(self):
+        self.image_data = self.image_data.reshape(self.num_images, -1)
+        return self
+
+    def get_data(self):
+        return self.image_data
 
 if __name__ == '__main__':
-    np.set_printoptions(threshold=np.inf)
-    db = DataPreparation()
-    db.flatten_array()
-    db.normalize_array()
-    print(db.x_train[0])
-    print(db.x_test.shape)
-    db.show_image() 
+
+    #np.set_printoptions(threshold=np.inf)
+    train_data = DataPreparation(r"mnist-ds\train-images.idx3-ubyte") \
+                    .load_image_data() \
+                    .normalize_data() \
+                    .flatten_data() \
+                    .get_data()
+
+    test_data = DataPreparation(r"mnist-ds\t10k-images.idx3-ubyte") \
+                    .load_image_data() \
+                    .normalize_data() \
+                    .flatten_data() \
+                    .get_data()
+
+    # with open('training.txt','w') as file:
+    #     file.write(str(train_data))
+    # with open('testing.txt','w') as file:
+    #     file.write(str(test_data))
