@@ -41,6 +41,8 @@ class DataPreparation:
 if __name__ == '__main__':
 
     #np.set_printoptions(threshold=np.inf)
+    """
+    Use this format to initialize the data
     train_data = DataPreparation(r"mnist-ds\train-images.idx3-ubyte") \
                     .load_image_data() \
                     .normalize_data() \
@@ -52,7 +54,7 @@ if __name__ == '__main__':
                     .normalize_data() \
                     .flatten_data() \
                     .get_data()
-
+    """
     # with open('training.txt','w') as file:
     #     file.write(str(train_data))
     # with open('testing.txt','w') as file:
