@@ -1,4 +1,5 @@
 import random
+import json
 import numpy as np
 
 from Layer import *
@@ -50,6 +51,16 @@ class Network():
     
 
         #back
+        
+    def save(self, file_name):
+        with open(file_name, 'w') as net:
+            hidden_layers = self.layers[1:-1]
+            net.write(json.dumps(hidden_layers))
+    
+    def read(self, file_name):
+        with open(file_name) as net:
+            text = json.loads(net.read())
+            
 
 
 
