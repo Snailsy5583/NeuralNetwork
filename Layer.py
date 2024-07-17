@@ -71,47 +71,14 @@ class Layer_huh:
     def __init__(self, num_neurons, prev_layer=None):
         self.num_neurons = num_neurons
         self.prev_layer = prev_layer
+        self.values = []
         if prev_layer:
             self.weights, self.biases = self.init_w_zeros(prev_layer.getValues().shape[0])
 
-    def init_w_zeros(dim):
-        w = np.zeros(shape=(dim, 1))
-        b = 0
-
-        assert(w.shape == (dim, 1))
-
-        return w, b
-    
-
-    def intialize2(dims):
-        parameters = {}
-        layers = len(dims) #number of layers teehee
-
-        for l in (1, layers):
-            #randn(3,2) = array [[a,b],[c,d],[e,f]]
-            parameters['w' + str(l)] = np.random.randn(dims[l], dims[l-1]) 
-            parameters['b' + str(l)] = np.zeros(shape=(dims[l], 1))
-        
-        return parameters
-    
-
-    def forward_prop(self, W, b, input, label):
-        values = af.sigmoid(np.dot(W, input) + b)
-        
+    def forward_prop(self, W, b, input, activation):
+        values = activation(np.dot(W, input) + b)
+        self.values
         return values
-    # put in array of inputs
-    def forward_model(self, X, parameters):
-        input = X
-        layers = len(parameters) // 2
-
-        for l in range(1, layers):
-            last = input
-            input = self.forward_prop(parameters['w' + str(l)], 
-                                      parameters['b' + str(1)], 
-                                      last)
-        
-
-
 
     def cost_der(self, X, y):
         return(X - y)

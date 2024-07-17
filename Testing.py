@@ -1,7 +1,7 @@
 import sys
 
 import PIL
-
+import numpy as np
 import PIL.Image
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
@@ -59,3 +59,10 @@ def gen(drawCallback):
     w = MainWindow(drawCallback)
     
     return app, w 
+
+def sigmoid(x):
+	return 1.0/(1.0+np.exp(-1*x))
+
+test = [1,2,3,4,5,6,7,8]
+print(-1*(test))
+#change to numpy array and it should work
