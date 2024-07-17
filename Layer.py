@@ -43,7 +43,10 @@ class Layer:
         return self.getValues()
     
     def backward_prop(self,output_gradient):
-        pass
+        input_val = np.asmatrix(self.prev_layer.getValues())
+        weights = np.asmatrix([neuron.weights for neuron in self.neurons])
+        output_vals = np.asarray(self.getValues())
+        output_ders = af.sigmoid_derivative(output_vals)
     
     def getValues(self):
         return [neuron.value for neuron in self.neurons]
