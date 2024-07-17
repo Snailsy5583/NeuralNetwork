@@ -24,9 +24,6 @@ class Network():
         
         return error
 
-    def prop(w, b, X):
-        Z = AF.sigmoid(np.dot(w.T, X) + b)
-        cost = ...
 
         #back
 
