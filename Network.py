@@ -6,7 +6,7 @@ from Layer import *
 from ActivationFunc import ActivationFunction as AF   
 
 class Network():
-    #sizes is list of nums for number of neurons at each layer
+    # sizes is list of nums for number of neurons at each layer
     def __init__(self, sizes):
         self.sizes = sizes
         self.numLayers = len(sizes)
@@ -57,12 +57,16 @@ class Network():
     def save(self, file_name):
         with open(file_name, 'w') as net:
             hidden_layers = self.layers[1:-1]
+            net.write(json.dumps(self.sizes))
             net.write(json.dumps(hidden_layers))
     
-    def read(self, file_name):
+    def load(self, file_name):
         with open(file_name) as net:
-            text = json.loads(net.read())
+            self.sizes = json.loads(net.readline())
+            hidden_layers = json.loads(net.read())
+            self.layers = np.asarray([Layer(self.sizes[0])] + hidden_layers + [Layer(self.sizes[-1])])
             
+            return self.layers
 
 
 
