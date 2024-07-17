@@ -1,5 +1,5 @@
 from Neuron import *
-from DataPreparation import DataPreparation
+#from DataPreparation import DataPreparation
 from ActivationFunc import ActivationFunction as af
 import numpy as np
 import time
@@ -75,9 +75,9 @@ class Layer_huh:
         if prev_layer:
             self.weights, self.biases = self.init_w_zeros(prev_layer.getValues().shape[0])
 
-    def forward_prop(self, W, b, input, activation):
+    def forward_prop(W, b, input, activation):
         values = activation(np.dot(W, input) + b)
-        self.values
+        # self.values
         return values
 
     def cost_der(self, X, y):

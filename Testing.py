@@ -63,6 +63,6 @@ def gen(drawCallback):
 def sigmoid(x):
 	return 1.0/(1.0+np.exp(-1*x))
 
-test = [1,2,3,4,5,6,7,8]
-print(-1*(test))
+test = np.asarray([1,2,3,4,5,6,7,8])
+#print(sigmoid(test))
 #change to numpy array and it should work
