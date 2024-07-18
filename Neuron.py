@@ -5,4 +5,4 @@ class Neuron():
         self.value = 0
         
         self.weights = np.random.randn(numOfWeights)
-        self.bias = 0
+        self.bias = np.random.rand()
