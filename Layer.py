@@ -1,3 +1,4 @@
+import pickle
 from Neuron import *
 #from DataPreparation import DataPreparation
 from ActivationFunc import ActivationFunction as af
@@ -59,10 +60,15 @@ class Layer:
         return [neuron.weights for neuron in self.neurons]
     
     def getBiases(self):
-        return [[neuron.bias] for neuron in self.neurons]
+        return [neuron.bias for neuron in self.neurons]
     
     def getNeurons(self):
         return self.neurons
+    
+    def __str__(self) -> str:
+        w = self.getWeights()
+        b = self.getBiases()
+        return f"{np.array_str(w,len(w))};{np.array_str(b, len(b))}"
 
 class Layer_huh:
     '''
@@ -113,7 +119,7 @@ class Layer_huh:
         return [neuron.weights for neuron in self.neurons]
     
     def getBiases(self):
-        return [[neuron.bias] for neuron in self.neurons]
+        return [neuron.bias for neuron in self.neurons]
     
     def getNeurons(self):
         return self.neurons
