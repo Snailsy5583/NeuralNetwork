@@ -1,6 +1,7 @@
 import os
 import random
-import pickle
+import pickle as pickle_rick
+from typing import List
 import numpy as np
 
 from Layer import *
@@ -10,7 +11,7 @@ class Network():
     # sizes is list of nums for number of neurons at each layer
     def __init__(self, sizes):
         self.sizes = sizes
-        self.numLayers = len(sizes)
+        self.num_layers = len(sizes)
         self.layers = [Layer(self.sizes[0])]
         for i in range(1, self.numLayers):
             self.layers.append(Layer(self.sizes[i], self.layers[i-1])) # give it a reference to the prev layer as well
@@ -45,40 +46,59 @@ class Network():
                                   activation=af.sigmoid)
         return final
     
+    def forward_prop(self, input):
+        self.layers[0].setValues(input)
+        for i in range(1, len(self.layers)):
+            self.layers[i].forward_prop()
+        return self.layers[-1].getValues()
+    
     def cost(self, batman):
         output = self.layers[-1]
         error = 0
         for i in range(len(batman)):
-            error += (batman[i] - output[i])**2
-        
-        return error
-
+            error += (output[i] - batman[i])**2
+            
+        self.cost = error
+        return self.cost
+        #back    
     
-
-        #back
-        
     def save(self, prefix:str):
         os.mkdir(f"saves/{prefix}")
         with open(f"saves/{prefix}/sizes.pkl", 'wb') as file:
-            pickle.dump(self.sizes, file)
+            pickle_rick.dump(self.sizes, file)
         with open(f"saves/{prefix}/layers.pkl", 'wb') as file:
             hidden_layers = self.layers[1:-1]
-            pickle.dump(hidden_layers, file)
+            pickle_rick.dump(hidden_layers, file)
     
     def load(self, prefix):
         with open(f"saves/{prefix}/sizes.pkl", 'rb') as sizes:
             with open(f"saves/{prefix}/layers.pkl", 'rb') as layers:
-                self.sizes = pickle.load(sizes)
-                hidden_layers = pickle.load(layers)
+                self.sizes = pickle_rick.load(sizes)
+                hidden_layers = pickle_rick.load(layers)
                 self.layers = np.asarray([Layer(self.sizes[0])] + hidden_layers + [Layer(self.sizes[-1])])
                 
                 return self.layers
+            
+def superman(data, num_copies=1024, survival_rate=0.1, finish=128, sizes=[28*28, 16, 16, 16, 10], num_random=50): # genetic algorithm
+    survivors:List[Network] = []
+    while finish >= 0:
+        networks:List[Network] = survivors + [Network(sizes) for i in range(num_copies - len(survivors))]
+        
+        for network in networks:
+            output = network.forward_prop() # set input
+            cost = network.cost() # set the correct data
+            if len(survivors) < num_copies*survival_rate:
+                survivors.append(network)
+                survivors.sort(key=lambda net: net.cost)
+            elif cost < survivors[-1].cost:
+                survivors[-1] = network
+                survivors.sort(key=lambda net: net.cost)
+                
+            
+        finish -= 1
 
 if __name__ == "__main__":
-    network = Network([28*28, 16, 16, 16, 10])
-    network.save("sussy")
-    print(network.sizes)
-    print(network.layers[2].getWeights())
+    superman()
 
 ## Calc output for a single nueron given weights, bias, and inputs
 
