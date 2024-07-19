@@ -2,6 +2,7 @@ import pickle
 from Neuron import *
 #from DataPreparation import DataPreparation
 from ActivationFunc import ActivationFunction as af
+from DataPreparation import DataPreparation
 import numpy as np
 import time
 
@@ -129,9 +130,17 @@ def test_prop(num):
     x = Layer_huh(16384)
     z = Layer_huh(16, x)
     
-    dp = DataPreparation(r'by_field\by_field\hssf_8')
-    dp.get_images()
-    x.setValues(dp.create_data())
+    train_data = DataPreparation(r"mnist-ds\train-images.idx3-ubyte") \
+                    .load_train_image_data() \
+                    .normalize_data() \
+                    .flatten_data() \
+                    .get_train_data()
+
+    test_data = DataPreparation(r"mnist-ds\train-labels.idx1-ubyte") \
+                    .load_test_image_data() \
+                    .get_test_data()
+    
+    x.setValues(train_data)
     
     t1 = time.time()
     for i in range(num):
