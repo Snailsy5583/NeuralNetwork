@@ -65,6 +65,7 @@ if __name__ == '__main__':
     #np.set_printoptions(threshold=np.inf)
     """
     Use this format to initialize the data
+    
     train_data = DataPreparation(r"mnist-ds\train-images.idx3-ubyte") \
                     .load_train_image_data() \
                     .normalize_data() \
