@@ -3,7 +3,7 @@ import random
 import pickle as pickle_rick
 from typing import List
 import numpy as np
-
+from DataPreparation import DataPreparation
 from Layer import *
 from ActivationFunc import ActivationFunction as AF   
 
@@ -80,6 +80,15 @@ class Network():
                 return self.layers
             
 def superman(data, num_copies=1024, survival_rate=0.1, finish=128, sizes=[28*28, 16, 16, 16, 10], num_random=50): # genetic algorithm
+    train_data = DataPreparation(r"mnist-ds\train-images.idx3-ubyte") \
+                    .load_train_image_data() \
+                    .normalize_data() \
+                    .flatten_data() \
+                    .get_train_data()
+
+    test_data = DataPreparation(r"mnist-ds\train-labels.idx1-ubyte") \
+                    .load_test_image_data() \
+                    .get_test_data()
     survivors:List[Network] = []
     while finish >= 0:
         networks:List[Network] = survivors + [Network(sizes) for i in range(num_copies - len(survivors))]
